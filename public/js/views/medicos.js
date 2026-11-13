@@ -3,7 +3,7 @@ import {
   createMedico,
   updateMedico,
   deleteMedico,
-} = '../api.js';
+} from '../api.js';
 
 import {
   renderSkeletonTable,

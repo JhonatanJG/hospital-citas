@@ -3,7 +3,7 @@ import {
   createSala,
   updateSala,
   deleteSala,
-} = '../api.js';
+} from '../api.js';
 
 import {
   renderSkeletonTable,

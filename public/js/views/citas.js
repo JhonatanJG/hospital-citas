@@ -12,7 +12,7 @@ import {
   getMedicamentos,
   addPrescripcion,
   deletePrescripcion,
-} = '../api.js';
+} from '../api.js';
 
 import {
   badgeHtml,

@@ -3,7 +3,7 @@ import {
   createHorario,
   updateHorario,
   deleteHorario,
-} = '../api.js';
+} from '../api.js';
 
 import {
   formatTime,

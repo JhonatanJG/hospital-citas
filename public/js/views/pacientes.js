@@ -4,7 +4,7 @@ import {
   updatePaciente,
   deletePaciente,
   getPacienteById,
-} = '../api.js';
+} from '../api.js';
 
 import {
   formatDate,

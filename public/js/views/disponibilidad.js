@@ -5,7 +5,7 @@ import {
   getMedicos,
   getSalas,
   getHorarios,
-} = '../api.js';
+} from '../api.js';
 
 import {
   badgeHtml,

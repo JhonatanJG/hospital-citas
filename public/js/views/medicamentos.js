@@ -3,7 +3,7 @@ import {
   createMedicamento,
   updateMedicamento,
   deleteMedicamento,
-} = '../api.js';
+} from '../api.js';
 
 import {
   stockBadgeHtml,
