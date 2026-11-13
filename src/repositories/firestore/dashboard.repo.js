@@ -19,46 +19,79 @@ async function getStats() {
   const reservas = reservasSnap.docs.map(d => ({ id: d.id, ...d.data() }));
   const disponibilidades = dispSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-  // citasPorEstado
-  const citasPorEstado = {};
+  // Contadores por estado
+  let citasHoy = 0;
+  let programadas = 0;
+  let atendidas = 0;
+  let canceladas = 0;
+
+  const estadoCounts = {};
+
   for (const r of reservas) {
-    citasPorEstado[r.estado] = (citasPorEstado[r.estado] || 0) + 1;
+    const estado = r.estado;
+    if (estado) {
+      estadoCounts[estado] = (estadoCounts[estado] || 0) + 1;
+    }
+
+    if (estado === 'programada') {
+      programadas++;
+      if (r.fecha === todayStr) {
+        citasHoy++;
+      }
+    } else if (estado === 'atendida') {
+      atendidas++;
+    } else if (estado === 'cancelada') {
+      canceladas++;
+    }
   }
+
+  // citasPorEstado formateado como array de objetos { estado, cantidad }
+  const citasPorEstado = Object.keys(estadoCounts)
+    .sort()
+    .map(estado => ({
+      estado,
+      cantidad: estadoCounts[estado],
+    }));
 
   // cuposLibres: estado='libre' and fecha >= today
   const cuposLibres = disponibilidades.filter(d => d.estado === 'libre' && d.fecha >= todayStr).length;
 
-  // proximasCitas: programadas sorted by fecha+horaInicio, top 5
-  const programadas = reservas
+  // proximasCitas: programadas ordenadas por fecha + horaInicio (top 5)
+  const proximasCitas = reservas
     .filter(r => r.estado === 'programada' && r.fecha >= todayStr)
     .sort((a, b) => {
-      const keyA = `${a.fecha}T${a.horaInicio}`;
-      const keyB = `${b.fecha}T${b.horaInicio}`;
+      const keyA = `${a.fecha || ''}T${a.horaInicio || ''}`;
+      const keyB = `${b.fecha || ''}T${b.horaInicio || ''}`;
       return keyA.localeCompare(keyB);
     })
     .slice(0, 5)
     .map(r => ({
-      id: r.id,
-      pacienteNombre: r.pacienteNombre,
-      medicoNombre: r.medicoNombre,
-      especialidad: r.especialidad,
-      fecha: r.fecha,
-      horaInicio: r.horaInicio,
-      horaFin: r.horaFin,
-      salaNombre: r.salaNombre,
+      id: String(r.id),
+      pacienteId: r.pacienteId ? String(r.pacienteId) : '',
+      pacienteNombre: r.pacienteNombre || '',
+      pacienteDocumento: r.pacienteDocumento || '',
+      disponibilidadId: r.disponibilidadId ? String(r.disponibilidadId) : '',
+      medicoNombre: r.medicoNombre || '',
+      especialidad: r.especialidad || '',
+      salaNombre: r.salaNombre || '',
+      fecha: r.fecha || null,
+      horaInicio: r.horaInicio || null,
+      horaFin: r.horaFin || null,
+      motivo: r.motivo || '',
+      estado: r.estado || 'programada',
+      creadaEn: r.creadaEn || null,
     }));
 
   return {
+    citasHoy,
+    programadas,
+    atendidas,
+    canceladas,
+    cuposLibres,
     totalPacientes: pacientesSnap.size,
     totalMedicos: medicosSnap.size,
-    totalReservas: reservas.length,
-    cuposLibres,
-    citasPorEstado: {
-      programadas: citasPorEstado['programada'] || 0,
-      atendidas: citasPorEstado['atendida'] || 0,
-      canceladas: citasPorEstado['cancelada'] || 0,
-    },
-    proximasCitas: programadas,
+    proximasCitas,
+    citasPorEstado,
   };
 }
 
