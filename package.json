@@ -1,0 +1,27 @@
+{
+  "name": "hospital-citas",
+  "version": "1.0.0",
+  "description": "Sistema de gestión de citas médicas hospitalarias",
+  "main": "src/server.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "init-db": "node scripts/init-db.js",
+    "seed": "node scripts/seed.js",
+    "test": "node test/test-all.js && node test/test-seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "helmet": "^7.1.0",
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "pg-mem": "^3.0.14"
+  }
+}

@@ -1,0 +1,9 @@
+node_modules/
+.env
+*.env.local
+serviceAccountKey.json
+firebase-credentials.json
+*.key
+dist/
+.DS_Store
+Thumbs.db
